@@ -1,12 +1,13 @@
 import "dart:io";
-class Tabuleiro{
-  List <dynamic> tabuleiro = [];
 
-  Tabuleiro(List <dynamic> tabuleiro){
+class Tabuleiro {
+  List<dynamic> tabuleiro = [];
+
+  Tabuleiro(List<dynamic> tabuleiro) {
     this.tabuleiro = tabuleiro;
   }
 
-  void printTabuleiro(){
+  void printTabuleiro() {
     return print('''
 
   0 1 2
@@ -16,61 +17,88 @@ class Tabuleiro{
 ''');
   }
 
-  void alterarTabuleiro(x, y, p){ //p = player = X ou O
+  void alterarTabuleiro(x, y, p) {
+    //p = player = X ou O
     tabuleiro[x][y] = p;
   }
 }
 
-class Jogo{
+class Jogo {
   late bool gamerun;
 
-  Jogo(bool gamerun){
+  Jogo(bool gamerun) {
     this.gamerun = gamerun;
   }
 
-  void start(){
-    final List <dynamic> tabuleiro = [
-    [" ", " ", " "],
-    [" ", " ", " "],
-    [" ", " ", " "],];
+  void start() {
+    final List<dynamic> tabuleiro = [
+      [" ", " ", " "],
+      [" ", " ", " "],
+      [" ", " ", " "],
+    ];
     Tabuleiro tab = Tabuleiro(tabuleiro);
-    while(gamerun == true){
-      for(int i=1; i<=9; i++){
-        if (i%2 == 0){
-          stdout.writeln();
-          print("Turno do O:");
-          tab.printTabuleiro();
-          print("Selecione em qual linha você deseja jogar:");
-          String? inx = stdin.readLineSync();
-          tab.printTabuleiro();
-          print("Selecione em qual coluna você deseja jogar:");
-          String? iny = stdin.readLineSync();
-          int intx = int.parse(inx!);
-          int inty = int.parse(iny!); 
-          tab.alterarTabuleiro(intx, inty, "O");
+
+    while (gamerun == true) {
+      List<int> turn(String p) {
+        stdout.writeln();
+        print("Turno do $p:");
+        tab.printTabuleiro();
+        print("Selecione em qual linha você deseja jogar:");
+        String? inx = stdin.readLineSync();
+        tab.printTabuleiro();
+        print("Selecione em qual coluna você deseja jogar:");
+        String? iny = stdin.readLineSync();
+        int intx = int.parse(inx!);
+        int inty = int.parse(iny!);
+        return [intx, inty];
+      }
+
+      for (int i = 1; i <= 9; i++) {
+        if (i % 2 == 0) {
+          String p = "O";
+          List<int> pos = turn(p);
+          int intx = pos[0];
+          int inty = pos[1];
+          while (intx == null || inty == null) {
+            //corrigir tratamento de erro | adionar <0 ou >2 e possivelmente trasnformar em função
+            print("Insira corretamente os valores de linha e coluna!");
+            pos = turn(p);
+            intx = pos[0];
+            inty = pos[1];
+          }
+          while (tab.tabuleiro[intx][inty] != " ") {
+            print("Casa ocupada, escolha outra!");
+            pos = turn(p);
+            intx = pos[0];
+            inty = pos[1];
+          }
+          tab.alterarTabuleiro(intx, inty, p);
+        } else {
+          String p = "X";
+          List<int> pos = turn(p);
+          int intx = pos[0];
+          int inty = pos[1];
+          while (intx == null || inty == null) {
+            print("Insira corretamente os valores de linha e coluna!");
+            pos = turn(p);
+            intx = pos[0];
+            inty = pos[1];
+          }
+          while (tab.tabuleiro[intx][inty] != " ") {
+            print("Casa ocupada, escolha outra!");
+            pos = turn(p);
+            intx = pos[0];
+            inty = pos[1];
+          }
+          tab.alterarTabuleiro(intx, inty, p);
         }
-        else{
-          stdout.writeln();
-          print("Turno do X:");
-          tab.printTabuleiro();
-          print("Selecione em qual linha você deseja jogar:");
-          String? inx = stdin.readLineSync();
-          tab.printTabuleiro();
-          print("Selecione em qual coluna você deseja jogar:");
-          String? iny = stdin.readLineSync();
-          int intx = int.parse(inx!);
-          int inty = int.parse(iny!); 
-          tab.alterarTabuleiro(intx, inty, "X");
-        }
-      gamerun = false;
+        gamerun = false;
       }
     }
   }
-  //para fazer os turnos usar números impares para decidir de quem é o turno
-  //EX: i = 1, se for impar vez da bolinha, i++ vira par é vez do x
 }
 
-void main(){
+void main() {
   Jogo game = Jogo(true);
   bool run = true;
   while (run == true) {
@@ -81,18 +109,16 @@ Seja bem vindo ao jogo da velha do Schumann
 ===========================================
 
 Digite 0 para sair ou 1 para jogar:''');
-  String? input = stdin.readLineSync();
-  if (input == "0"){
-    run = false;
-  }
-  else{
-    game.start();
-  }   
+    String? input = stdin.readLineSync();
+    if (input == "0") {
+      run = false;
+    } else {
+      game.start();
+    }
   }
 }
 
 /*TODO:
-transformar a parte do game.start() em uma função
 if tab[x][y] != " "
 tratamento de erro
 <0 >2 erro
