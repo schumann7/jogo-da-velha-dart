@@ -58,10 +58,14 @@ class Jogo {
           String p = "O";
           List<int> pos = turn(p);
           int intx = pos[0];
+          while (intx != 0 && intx != 1 && intx != 2) {
+            print("Insira corretamente os valores para a linha!");
+            pos = turn(p);
+            intx = pos[0];
+          }
           int inty = pos[1];
-          while (intx == null || inty == null) {
-            //corrigir tratamento de erro | adionar <0 ou >2 e possivelmente trasnformar em função
-            print("Insira corretamente os valores de linha e coluna!");
+          while (inty != 0 && inty != 1 && inty != 2) {
+            print("Insira corretamente os valores para a coluna!");
             pos = turn(p);
             intx = pos[0];
             inty = pos[1];
@@ -77,9 +81,14 @@ class Jogo {
           String p = "X";
           List<int> pos = turn(p);
           int intx = pos[0];
+          while (intx != 0 && intx != 1 && intx != 2) {
+            print("Insira corretamente os valores para a linha!");
+            pos = turn(p);
+            intx = pos[0];
+          }
           int inty = pos[1];
-          while (intx == null || inty == null) {
-            print("Insira corretamente os valores de linha e coluna!");
+          while (inty != 0 && inty != 1 && inty != 2) {
+            print("Insira corretamente os valores para a coluna!");
             pos = turn(p);
             intx = pos[0];
             inty = pos[1];
@@ -92,6 +101,7 @@ class Jogo {
           }
           tab.alterarTabuleiro(intx, inty, p);
         }
+        tab.printTabuleiro();
         gamerun = false;
       }
     }
@@ -119,8 +129,6 @@ Digite 0 para sair ou 1 para jogar:''');
 }
 
 /*TODO:
-if tab[x][y] != " "
-tratamento de erro
-<0 >2 erro
-casa ocupada
-verificação de vencedor*/
+verificação de vencedor
+com switch case
+se passar os 9 turnos = velha*/
