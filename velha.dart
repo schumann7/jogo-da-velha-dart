@@ -35,6 +35,7 @@ class Jogo {
   }
 
   void start() {
+    gamerun = true;
     while (gamerun) {
       List<int> turn(String p) {
         stdout.writeln();
@@ -42,15 +43,17 @@ class Jogo {
         tab.printTabuleiro();
         print("Selecione em qual linha você deseja jogar:");
         String? inx = stdin.readLineSync();
-        tab.printTabuleiro();
         print("Selecione em qual coluna você deseja jogar:");
         String? iny = stdin.readLineSync();
         int intx = int.parse(inx!);
         int inty = int.parse(iny!);
+        print("\x1B[2J\x1B[0;0H");
         return [intx, inty];
       }
 
       for (int i = 1; i <= 9; i++) {
+        if (!gamerun) break;
+
         if (i % 2 == 0) {
           String p = "O";
           List<int> pos = turn(p);
@@ -100,49 +103,66 @@ class Jogo {
           tab.alterarTabuleiro(intx, inty, p);
           verificaGanhador(p);
         }
+
+        if (!gamerun) break;
       }
-      tab.printTabuleiro();
+
+      if (gamerun) {
+        tab.printTabuleiro();
         print('''
 
 =============================
           Deu velha!
 =============================''');
-        main();
+        print("\x1B[2J\x1B[0;0H");
+        gamerun = false;
+      }
     }
   }
 
   void verificaGanhador(p) {
-    void printar(p){
+    void printar(p) {
       print('''
 
 =============================
           $p ganhou!
           Parabéns!
 =============================''');
-      main();
+      print("\x1B[2J\x1B[0;0H");
+      gamerun = false;
     }
-    if (tab.tabuleiro[0][0] == p && tab.tabuleiro[0][1] == p && tab.tabuleiro[0][2] == p){
+
+    if (tab.tabuleiro[0][0] == p &&
+        tab.tabuleiro[0][1] == p &&
+        tab.tabuleiro[0][2] == p) {
       printar(p);
-    }
-    else if (tab.tabuleiro[1][0] == p && tab.tabuleiro[1][1] == p && tab.tabuleiro[1][2] == p){
+    } else if (tab.tabuleiro[1][0] == p &&
+        tab.tabuleiro[1][1] == p &&
+        tab.tabuleiro[1][2] == p) {
       printar(p);
-    }
-    else if (tab.tabuleiro[2][0] == p && tab.tabuleiro[2][1] == p && tab.tabuleiro[2][2] == p){
+    } else if (tab.tabuleiro[2][0] == p &&
+        tab.tabuleiro[2][1] == p &&
+        tab.tabuleiro[2][2] == p) {
       printar(p);
-    }
-    else if (tab.tabuleiro[0][0] == p && tab.tabuleiro[1][0] == p && tab.tabuleiro[2][0] == p){
+    } else if (tab.tabuleiro[0][0] == p &&
+        tab.tabuleiro[1][0] == p &&
+        tab.tabuleiro[2][0] == p) {
       printar(p);
-    }
-    else if (tab.tabuleiro[0][1] == p && tab.tabuleiro[1][1] == p && tab.tabuleiro[2][1] == p){
+    } else if (tab.tabuleiro[0][1] == p &&
+        tab.tabuleiro[1][1] == p &&
+        tab.tabuleiro[2][1] == p) {
       printar(p);
-    }
-    else if (tab.tabuleiro[0][2] == p && tab.tabuleiro[1][2] == p && tab.tabuleiro[2][2] == p){
+    } else if (tab.tabuleiro[0][2] == p &&
+        tab.tabuleiro[1][2] == p &&
+        tab.tabuleiro[2][2] == p) {
       printar(p);
-    }
-    else if (tab.tabuleiro[0][0] == p && tab.tabuleiro[1][1] == p && tab.tabuleiro[2][2] == p){
+    } else if (tab.tabuleiro[0][0] == p &&
+        tab.tabuleiro[1][1] == p &&
+        tab.tabuleiro[2][2] == p) {
       printar(p);
-    }
-    else if (tab.tabuleiro[0][2] == p && tab.tabuleiro[1][1] == p && tab.tabuleiro[2][0] == p){
+    } else if (tab.tabuleiro[0][2] == p &&
+        tab.tabuleiro[1][1] == p &&
+        tab.tabuleiro[2][0] == p) {
       printar(p);
     }
   }
@@ -150,10 +170,10 @@ class Jogo {
 
 void main() {
   List<dynamic> tabuleiro = [
-      [" ", " ", " "],
-      [" ", " ", " "],
-      [" ", " ", " "],
-    ];
+    [" ", " ", " "],
+    [" ", " ", " "],
+    [" ", " ", " "],
+  ];
   Jogo game = Jogo(true, tabuleiro);
   bool run = true;
   while (run) {
@@ -168,6 +188,12 @@ Digite 0 para sair ou pressione Enter para jogar:''');
     if (input == "0") {
       run = false;
     } else {
+      tabuleiro = [
+        [" ", " ", " "],
+        [" ", " ", " "],
+        [" ", " ", " "],
+      ];
+      game = Jogo(true, tabuleiro);
       game.start();
     }
   }
