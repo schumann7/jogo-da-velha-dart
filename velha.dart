@@ -108,13 +108,13 @@ class Jogo {
       }
 
       if (gamerun) {
+        print("\x1B[2J\x1B[0;0H");
         tab.printTabuleiro();
         print('''
 
 =============================
           Deu velha!
 =============================''');
-        print("\x1B[2J\x1B[0;0H");
         gamerun = false;
       }
     }
@@ -122,13 +122,14 @@ class Jogo {
 
   void verificaGanhador(p) {
     void printar(p) {
+      print("\x1B[2J\x1B[0;0H");
+      tab.printTabuleiro();
       print('''
 
 =============================
           $p ganhou!
           Parabéns!
 =============================''');
-      print("\x1B[2J\x1B[0;0H");
       gamerun = false;
     }
 
