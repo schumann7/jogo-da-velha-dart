@@ -25,20 +25,17 @@ class Tabuleiro {
 
 class Jogo {
   late bool gamerun;
+  late List<dynamic> tabuleiro;
+  late Tabuleiro tab;
 
-  Jogo(bool gamerun) {
+  Jogo(bool gamerun, List<dynamic> tabuleiro) {
     this.gamerun = gamerun;
+    this.tabuleiro = tabuleiro;
+    this.tab = Tabuleiro(tabuleiro);
   }
 
   void start() {
-    final List<dynamic> tabuleiro = [
-      [" ", " ", " "],
-      [" ", " ", " "],
-      [" ", " ", " "],
-    ];
-    Tabuleiro tab = Tabuleiro(tabuleiro);
-
-    while (gamerun == true) {
+    while (gamerun) {
       List<int> turn(String p) {
         stdout.writeln();
         print("Turno do $p:");
@@ -77,6 +74,7 @@ class Jogo {
             inty = pos[1];
           }
           tab.alterarTabuleiro(intx, inty, p);
+          verificaGanhador(p);
         } else {
           String p = "X";
           List<int> pos = turn(p);
@@ -100,25 +98,72 @@ class Jogo {
             inty = pos[1];
           }
           tab.alterarTabuleiro(intx, inty, p);
+          verificaGanhador(p);
         }
-        tab.printTabuleiro();
-        gamerun = false;
       }
+      tab.printTabuleiro();
+        print('''
+
+=============================
+          Deu velha!
+=============================''');
+        main();
+    }
+  }
+
+  void verificaGanhador(p) {
+    void printar(p){
+      print('''
+
+=============================
+          $p ganhou!
+          Parabéns!
+=============================''');
+      main();
+    }
+    if (tab.tabuleiro[0][0] == p && tab.tabuleiro[0][1] == p && tab.tabuleiro[0][2] == p){
+      printar(p);
+    }
+    else if (tab.tabuleiro[1][0] == p && tab.tabuleiro[1][1] == p && tab.tabuleiro[1][2] == p){
+      printar(p);
+    }
+    else if (tab.tabuleiro[2][0] == p && tab.tabuleiro[2][1] == p && tab.tabuleiro[2][2] == p){
+      printar(p);
+    }
+    else if (tab.tabuleiro[0][0] == p && tab.tabuleiro[1][0] == p && tab.tabuleiro[2][0] == p){
+      printar(p);
+    }
+    else if (tab.tabuleiro[0][1] == p && tab.tabuleiro[1][1] == p && tab.tabuleiro[2][1] == p){
+      printar(p);
+    }
+    else if (tab.tabuleiro[0][2] == p && tab.tabuleiro[1][2] == p && tab.tabuleiro[2][2] == p){
+      printar(p);
+    }
+    else if (tab.tabuleiro[0][0] == p && tab.tabuleiro[1][1] == p && tab.tabuleiro[2][2] == p){
+      printar(p);
+    }
+    else if (tab.tabuleiro[0][2] == p && tab.tabuleiro[1][1] == p && tab.tabuleiro[2][0] == p){
+      printar(p);
     }
   }
 }
 
 void main() {
-  Jogo game = Jogo(true);
+  List<dynamic> tabuleiro = [
+      [" ", " ", " "],
+      [" ", " ", " "],
+      [" ", " ", " "],
+    ];
+  Jogo game = Jogo(true, tabuleiro);
   bool run = true;
-  while (run == true) {
+  while (run) {
     print('''
 
 ===========================================
 Seja bem vindo ao jogo da velha do Schumann
 ===========================================
 
-Digite 0 para sair ou 1 para jogar:''');
+Digite 0 para sair ou pressione Enter para jogar:''');
     String? input = stdin.readLineSync();
     if (input == "0") {
       run = false;
@@ -127,8 +172,3 @@ Digite 0 para sair ou 1 para jogar:''');
     }
   }
 }
-
-/*TODO:
-verificação de vencedor
-com switch case
-se passar os 9 turnos = velha*/
